@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Lock, Star } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import StarRating from './StarRating';
 
 interface SongCardProps {
@@ -30,8 +30,8 @@ const SongCard = ({
   return (
     <motion.button
       className={`
-        relative w-full rounded-3xl p-5 shadow-card
-        flex flex-col items-center gap-3
+        relative w-full rounded-2xl p-4 shadow-card
+        flex flex-col items-center gap-2
         ${colorClasses[color]}
         ${isLocked ? 'opacity-70' : ''}
       `}
@@ -42,17 +42,17 @@ const SongCard = ({
     >
       {isLocked && (
         <motion.div 
-          className="absolute inset-0 bg-foreground/20 rounded-3xl flex items-center justify-center"
+          className="absolute inset-0 bg-foreground/20 rounded-2xl flex items-center justify-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <Lock className="w-10 h-10 text-foreground/60" />
+          <Lock className="w-8 h-8 text-foreground/60" />
         </motion.div>
       )}
       
-      <div className="text-3xl">🎵</div>
-      <h3 className="font-bold text-foreground/80 text-center">{title}</h3>
-      <StarRating rating={stars} size="sm" animated={false} />
+      <div className="text-2xl">🎵</div>
+      <h3 className="font-bold text-sm text-foreground/80 text-center leading-tight">{title}</h3>
+      {stars > 0 && <StarRating rating={stars} size="sm" animated={false} />}
     </motion.button>
   );
 };

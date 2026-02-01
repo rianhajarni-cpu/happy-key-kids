@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Play } from 'lucide-react';
+import { ArrowLeft, Play, Square } from 'lucide-react';
 import SongCard from '@/components/ui/SongCard';
 import Piano from '@/components/piano/Piano';
 import BigButton from '@/components/ui/BigButton';
@@ -9,11 +9,19 @@ import { MELODIES, MelodyId, playNote } from '@/lib/audio';
 import { getProgress } from '@/lib/storage';
 
 const SONGS = [
-  { id: 'twinkle-twinkle' as MelodyId, title: 'Twinkle Twinkle', color: 'blue' as const, premium: false },
-  { id: 'mary-lamb' as MelodyId, title: 'Mary Had A Little Lamb', color: 'pink' as const, premium: false },
-  { id: 'happy-birthday' as MelodyId, title: 'Happy Birthday', color: 'yellow' as const, premium: false },
-  { id: 'ode-to-joy' as MelodyId, title: 'Ode to Joy', color: 'purple' as const, premium: true },
-  { id: 'jingle-bells' as MelodyId, title: 'Jingle Bells', color: 'green' as const, premium: true },
+  // Beginner - Free
+  { id: 'twinkle-twinkle' as MelodyId, title: 'Twinkle Twinkle', color: 'blue' as const, premium: false, difficulty: 'Easy' },
+  { id: 'mary-lamb' as MelodyId, title: 'Mary Had A Lamb', color: 'pink' as const, premium: false, difficulty: 'Easy' },
+  { id: 'happy-birthday' as MelodyId, title: 'Happy Birthday', color: 'yellow' as const, premium: false, difficulty: 'Easy' },
+  // Beginner - More
+  { id: 'hot-cross-buns' as MelodyId, title: 'Hot Cross Buns', color: 'orange' as const, premium: false, difficulty: 'Easy' },
+  { id: 'london-bridge' as MelodyId, title: 'London Bridge', color: 'green' as const, premium: false, difficulty: 'Easy' },
+  // Intermediate
+  { id: 'ode-to-joy' as MelodyId, title: 'Ode to Joy', color: 'purple' as const, premium: false, difficulty: 'Medium' },
+  { id: 'jingle-bells' as MelodyId, title: 'Jingle Bells', color: 'red' as const, premium: false, difficulty: 'Medium' },
+  { id: 'row-your-boat' as MelodyId, title: 'Row Your Boat', color: 'blue' as const, premium: false, difficulty: 'Easy' },
+  { id: 'old-macdonald' as MelodyId, title: 'Old MacDonald', color: 'green' as const, premium: false, difficulty: 'Medium' },
+  { id: 'baa-baa-sheep' as MelodyId, title: 'Baa Baa Black Sheep', color: 'purple' as const, premium: false, difficulty: 'Easy' },
 ];
 
 const Songs = () => {
@@ -23,38 +31,68 @@ const Songs = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
   const [highlightedKeys, setHighlightedKeys] = useState<string[]>([]);
+  const isPlayingRef = useRef(false);
+
+  // Sync ref with state
+  useEffect(() => {
+    isPlayingRef.current = isPlaying;
+  }, [isPlaying]);
 
   const playSong = async () => {
     if (!selectedSong) return;
     
     const melody = MELODIES[selectedSong];
+    if (!melody) return;
+    
     setIsPlaying(true);
+    isPlayingRef.current = true;
     setCurrentNoteIndex(0);
 
     for (let i = 0; i < melody.notes.length; i++) {
-      if (!isPlaying) break;
+      // Check ref instead of state to get current value
+      if (!isPlayingRef.current) break;
       
       const note = melody.notes[i];
       setCurrentNoteIndex(i);
       setHighlightedKeys([note]);
       playNote(note, 0.5);
       await new Promise(resolve => setTimeout(resolve, melody.tempo));
+      
+      if (!isPlayingRef.current) break;
+      
       setHighlightedKeys([]);
       await new Promise(resolve => setTimeout(resolve, 50));
     }
 
     setIsPlaying(false);
+    isPlayingRef.current = false;
     setCurrentNoteIndex(0);
+    setHighlightedKeys([]);
   };
 
   const stopSong = () => {
     setIsPlaying(false);
+    isPlayingRef.current = false;
     setHighlightedKeys([]);
+    setCurrentNoteIndex(0);
+  };
+
+  const handleKeyPress = (note: string) => {
+    // Allow user to play along
+    playNote(note, 0.5);
   };
 
   if (selectedSong) {
     const melody = MELODIES[selectedSong];
     const song = SONGS.find(s => s.id === selectedSong);
+
+    if (!melody) {
+      return (
+        <div className="min-h-screen bg-gradient-sky flex items-center justify-center">
+          <p>Song not found</p>
+        </div>
+      );
+    }
 
     return (
       <div className="min-h-screen bg-gradient-sky flex flex-col safe-top safe-bottom">
@@ -76,13 +114,16 @@ const Songs = () => {
             <ArrowLeft className="w-6 h-6" />
           </motion.button>
 
-          <h1 className="text-xl font-bold">{song?.title}</h1>
+          <div>
+            <h1 className="text-xl font-bold">{song?.title}</h1>
+            <p className="text-sm text-muted-foreground">{song?.difficulty}</p>
+          </div>
         </motion.div>
 
         {/* Main content */}
         <div className="flex-1 flex flex-col items-center justify-center px-4">
           <motion.div 
-            className="bg-card rounded-3xl p-6 shadow-card text-center mb-6"
+            className="bg-card rounded-3xl p-6 shadow-card text-center mb-6 w-full max-w-sm"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
           >
@@ -99,43 +140,52 @@ const Songs = () => {
                 <p className="text-lg font-bold text-primary animate-pulse">
                   Now Playing...
                 </p>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground mb-4">
                   Note {currentNoteIndex + 1} of {melody.notes.length}
                 </p>
-                <BigButton 
-                  variant="secondary" 
+                <motion.button
+                  className="bg-destructive text-destructive-foreground px-8 py-4 rounded-2xl font-bold shadow-button flex items-center justify-center gap-2 mx-auto"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={stopSong}
-                  className="mt-4"
                 >
+                  <Square className="w-5 h-5" />
                   Stop
-                </BigButton>
+                </motion.button>
               </>
             ) : (
-              <BigButton 
-                variant="primary" 
-                icon={<Play />} 
-                onClick={playSong}
-              >
-                Play Song
-              </BigButton>
+              <>
+                <p className="text-muted-foreground mb-4">
+                  {melody.notes.length} notes • Tap Play to hear the song!
+                </p>
+                <motion.button
+                  className="bg-gradient-primary text-primary-foreground px-8 py-4 rounded-2xl font-bold shadow-button flex items-center justify-center gap-2 mx-auto"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={playSong}
+                >
+                  <Play className="w-5 h-5" />
+                  Play Song
+                </motion.button>
+              </>
             )}
           </motion.div>
 
           {/* Note visualization */}
-          <div className="flex flex-wrap justify-center gap-2 max-w-sm">
+          <div className="flex flex-wrap justify-center gap-2 max-w-sm px-4">
             {melody.notes.map((note, index) => (
               <motion.div
                 key={index}
-                className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm ${
+                className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-xs transition-all ${
                   index === currentNoteIndex && isPlaying
-                    ? 'bg-accent text-accent-foreground scale-110'
-                    : index < currentNoteIndex
-                    ? 'bg-success/30 text-success-foreground'
+                    ? 'bg-accent text-accent-foreground scale-125 shadow-lg'
+                    : index < currentNoteIndex && isPlaying
+                    ? 'bg-success/40 text-success-foreground'
                     : 'bg-muted text-muted-foreground'
                 }`}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ delay: index * 0.05 }}
+                transition={{ delay: index * 0.03 }}
               >
                 {note.replace('4', '').replace('5', '')}
               </motion.div>
@@ -151,6 +201,7 @@ const Songs = () => {
         >
           <Piano 
             highlightedKeys={highlightedKeys}
+            onKeyPress={handleKeyPress}
             colorfulKeys={true}
             size="large"
           />
@@ -182,14 +233,14 @@ const Songs = () => {
 
         {/* Song Grid */}
         <motion.div 
-          className="grid grid-cols-2 gap-4"
+          className="grid grid-cols-2 gap-3"
           initial="hidden"
           animate="visible"
           variants={{
             hidden: { opacity: 0 },
             visible: {
               opacity: 1,
-              transition: { staggerChildren: 0.1 },
+              transition: { staggerChildren: 0.08 },
             },
           }}
         >
@@ -216,16 +267,22 @@ const Songs = () => {
           })}
         </motion.div>
 
-        {/* Premium info */}
+        {/* Fun message */}
         <motion.div 
-          className="mt-8 bg-gradient-fun rounded-3xl p-6 text-center"
+          className="mt-6 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <p className="text-lg font-bold text-primary-foreground">🎹 More Songs Coming!</p>
-          <p className="text-sm text-primary-foreground/80 mt-1">
-            Practice to unlock new songs
+          <motion.div
+            className="text-4xl mb-2"
+            animate={{ rotate: [0, 10, -10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            🎹
+          </motion.div>
+          <p className="text-muted-foreground font-semibold">
+            Tap a song to play it!
           </p>
         </motion.div>
       </div>

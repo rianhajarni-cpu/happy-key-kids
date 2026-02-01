@@ -159,12 +159,12 @@ export const playStarSound = (): void => {
   });
 };
 
-// Pre-defined melodies
+// Pre-defined melodies - Extended library
 export const MELODIES = {
   'twinkle-twinkle': {
     name: 'Twinkle Twinkle',
     notes: ['C4', 'C4', 'G4', 'G4', 'A4', 'A4', 'G4', 'F4', 'F4', 'E4', 'E4', 'D4', 'D4', 'C4'],
-    tempo: 500,
+    tempo: 450,
   },
   'mary-lamb': {
     name: 'Mary Had A Little Lamb',
@@ -174,17 +174,42 @@ export const MELODIES = {
   'happy-birthday': {
     name: 'Happy Birthday',
     notes: ['C4', 'C4', 'D4', 'C4', 'F4', 'E4', 'C4', 'C4', 'D4', 'C4', 'G4', 'F4'],
-    tempo: 500,
+    tempo: 450,
   },
   'ode-to-joy': {
     name: 'Ode to Joy',
     notes: ['E4', 'E4', 'F4', 'G4', 'G4', 'F4', 'E4', 'D4', 'C4', 'C4', 'D4', 'E4', 'E4', 'D4', 'D4'],
-    tempo: 450,
+    tempo: 400,
   },
   'jingle-bells': {
     name: 'Jingle Bells',
-    notes: ['E4', 'E4', 'E4', 'E4', 'E4', 'E4', 'E4', 'G4', 'C4', 'D4', 'E4'],
+    notes: ['E4', 'E4', 'E4', 'E4', 'E4', 'E4', 'E4', 'G4', 'C4', 'D4', 'E4', 'F4', 'F4', 'F4', 'F4', 'E4', 'E4', 'E4', 'E4', 'D4', 'D4', 'E4', 'D4', 'G4'],
+    tempo: 300,
+  },
+  'hot-cross-buns': {
+    name: 'Hot Cross Buns',
+    notes: ['E4', 'D4', 'C4', 'E4', 'D4', 'C4', 'C4', 'C4', 'C4', 'C4', 'D4', 'D4', 'D4', 'D4', 'E4', 'D4', 'C4'],
+    tempo: 400,
+  },
+  'london-bridge': {
+    name: 'London Bridge',
+    notes: ['G4', 'A4', 'G4', 'F4', 'E4', 'F4', 'G4', 'D4', 'E4', 'F4', 'E4', 'F4', 'G4', 'G4', 'A4', 'G4', 'F4', 'E4', 'F4', 'G4', 'D4', 'G4', 'E4', 'C4'],
     tempo: 350,
+  },
+  'row-your-boat': {
+    name: 'Row Your Boat',
+    notes: ['C4', 'C4', 'C4', 'D4', 'E4', 'E4', 'D4', 'E4', 'F4', 'G4', 'C5', 'C5', 'C5', 'G4', 'G4', 'G4', 'E4', 'E4', 'E4', 'C4', 'C4', 'C4', 'G4', 'F4', 'E4', 'D4', 'C4'],
+    tempo: 350,
+  },
+  'old-macdonald': {
+    name: 'Old MacDonald',
+    notes: ['G4', 'G4', 'G4', 'D4', 'E4', 'E4', 'D4', 'B4', 'B4', 'A4', 'A4', 'G4', 'D4', 'G4', 'G4', 'G4', 'D4', 'E4', 'E4', 'D4'],
+    tempo: 350,
+  },
+  'baa-baa-sheep': {
+    name: 'Baa Baa Black Sheep',
+    notes: ['G4', 'G4', 'D4', 'D4', 'E4', 'F4', 'G4', 'A4', 'G4', 'F4', 'E4', 'E4', 'D4', 'C4', 'D4', 'E4', 'F4', 'G4'],
+    tempo: 400,
   },
 };
 
