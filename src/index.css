@@ -2,95 +2,99 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+/* Kids Piano Trainer Design System
+   Pastel, joyful, child-friendly aesthetic
+   All colors in HSL */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Core Pastels */
+    --background: 45 100% 97%;
+    --foreground: 280 30% 25%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Soft cream cards */
+    --card: 40 100% 98%;
+    --card-foreground: 280 30% 25%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 40 100% 98%;
+    --popover-foreground: 280 30% 25%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Soft Coral/Peach */
+    --primary: 15 90% 72%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Mint Green */
+    --secondary: 160 50% 75%;
+    --secondary-foreground: 160 50% 20%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted - Soft Lavender */
+    --muted: 270 40% 92%;
+    --muted-foreground: 270 20% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent - Sunny Yellow */
+    --accent: 45 95% 70%;
+    --accent-foreground: 45 80% 20%;
+
+    /* Piano Keys */
+    --key-white: 45 30% 98%;
+    --key-white-pressed: 45 40% 92%;
+    --key-black: 280 25% 20%;
+    --key-black-pressed: 280 30% 30%;
+
+    /* Special Colors */
+    --success: 145 60% 55%;
+    --success-foreground: 145 60% 15%;
+    --star: 45 100% 60%;
+    --star-empty: 45 20% 85%;
+
+    /* Game Colors */
+    --game-red: 0 85% 75%;
+    --game-orange: 25 95% 70%;
+    --game-yellow: 45 95% 70%;
+    --game-green: 145 60% 70%;
+    --game-blue: 200 80% 75%;
+    --game-purple: 270 60% 78%;
+    --game-pink: 330 70% 80%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(15 90% 72%), hsl(330 70% 80%));
+    --gradient-secondary: linear-gradient(135deg, hsl(160 50% 75%), hsl(200 80% 75%));
+    --gradient-accent: linear-gradient(135deg, hsl(45 95% 70%), hsl(25 95% 70%));
+    --gradient-fun: linear-gradient(135deg, hsl(270 60% 78%), hsl(200 80% 75%));
+    --gradient-sky: linear-gradient(180deg, hsl(200 80% 90%), hsl(200 60% 95%));
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px hsl(280 30% 25% / 0.08);
+    --shadow-button: 0 6px 20px hsl(280 30% 25% / 0.15);
+    --shadow-card: 0 8px 30px hsl(280 30% 25% / 0.1);
+    --shadow-key: 0 4px 8px hsl(280 30% 25% / 0.2);
+    --shadow-key-pressed: 0 2px 4px hsl(280 30% 25% / 0.15);
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 45 30% 88%;
+    --input: 45 30% 88%;
+    --ring: 15 90% 72%;
 
-    --radius: 0.5rem;
+    --radius: 1.25rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Keep light theme for kids app - dark mode not needed */
+    --background: 45 100% 97%;
+    --foreground: 280 30% 25%;
   }
 }
 
@@ -99,7 +103,164 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
-  body {
-    @apply bg-background text-foreground;
+  html {
+    font-family: 'Nunito', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Nunito', sans-serif;
+    overflow-x: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+}
+
+@layer components {
+  /* Large Kid-Friendly Buttons */
+  .btn-kid {
+    @apply rounded-3xl px-8 py-5 text-xl font-bold transition-all duration-200;
+    box-shadow: var(--shadow-button);
+  }
+
+  .btn-kid:active {
+    transform: scale(0.95);
+    box-shadow: var(--shadow-soft);
+  }
+
+  /* Piano Key Styles */
+  .piano-key-white {
+    @apply relative rounded-b-xl transition-all duration-75;
+    background: hsl(var(--key-white));
+    box-shadow: var(--shadow-key);
+  }
+
+  .piano-key-white:active,
+  .piano-key-white.pressed {
+    background: hsl(var(--key-white-pressed));
+    box-shadow: var(--shadow-key-pressed);
+    transform: translateY(2px);
+  }
+
+  .piano-key-black {
+    @apply absolute rounded-b-lg transition-all duration-75 z-10;
+    background: hsl(var(--key-black));
+    box-shadow: var(--shadow-key);
+  }
+
+  .piano-key-black:active,
+  .piano-key-black.pressed {
+    background: hsl(var(--key-black-pressed));
+    box-shadow: var(--shadow-key-pressed);
+    transform: translateY(2px);
+  }
+
+  /* Card Styles */
+  .card-kid {
+    @apply rounded-3xl p-6;
+    background: hsl(var(--card));
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Star Styles */
+  .star-filled {
+    color: hsl(var(--star));
+    filter: drop-shadow(0 2px 4px hsl(var(--star) / 0.4));
+  }
+
+  .star-empty {
+    color: hsl(var(--star-empty));
+  }
+
+  /* Gradient Backgrounds */
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .bg-gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+
+  .bg-gradient-accent {
+    background: var(--gradient-accent);
+  }
+
+  .bg-gradient-fun {
+    background: var(--gradient-fun);
+  }
+
+  .bg-gradient-sky {
+    background: var(--gradient-sky);
+  }
+
+  /* Game Colors */
+  .bg-game-red { background: hsl(var(--game-red)); }
+  .bg-game-orange { background: hsl(var(--game-orange)); }
+  .bg-game-yellow { background: hsl(var(--game-yellow)); }
+  .bg-game-green { background: hsl(var(--game-green)); }
+  .bg-game-blue { background: hsl(var(--game-blue)); }
+  .bg-game-purple { background: hsl(var(--game-purple)); }
+  .bg-game-pink { background: hsl(var(--game-pink)); }
+
+  /* Glowing effect for guided keys */
+  .key-glow {
+    animation: keyGlow 1s ease-in-out infinite;
+  }
+
+  @keyframes keyGlow {
+    0%, 100% {
+      box-shadow: 0 0 20px hsl(var(--accent)), 0 0 40px hsl(var(--accent) / 0.5);
+    }
+    50% {
+      box-shadow: 0 0 30px hsl(var(--accent)), 0 0 60px hsl(var(--accent) / 0.7);
+    }
+  }
+
+  /* Bounce animation for mascot */
+  .mascot-bounce {
+    animation: mascotBounce 2s ease-in-out infinite;
+  }
+
+  @keyframes mascotBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Floating animation */
+  .float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-15px) rotate(2deg); }
+  }
+
+  /* Pulse for active elements */
+  .pulse-soft {
+    animation: pulseSoft 2s ease-in-out infinite;
+  }
+
+  @keyframes pulseSoft {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  /* Sparkle effect */
+  .sparkle {
+    animation: sparkle 1.5s ease-in-out infinite;
+  }
+
+  @keyframes sparkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.2); }
+  }
+}
+
+/* Safe area for mobile */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .safe-top { padding-top: env(safe-area-inset-top); }
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
 }
