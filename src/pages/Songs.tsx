@@ -1,10 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Play, Square } from 'lucide-react';
+import { ArrowLeft, Play, Square, Home } from 'lucide-react';
 import SongCard from '@/components/ui/SongCard';
 import Piano from '@/components/piano/Piano';
-import BigButton from '@/components/ui/BigButton';
 import { MELODIES, MelodyId, playNote } from '@/lib/audio';
 import { getProgress } from '@/lib/storage';
 
@@ -31,7 +30,17 @@ const Songs = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
   const [highlightedKeys, setHighlightedKeys] = useState<string[]>([]);
+  const [isLandscape, setIsLandscape] = useState(false);
   const isPlayingRef = useRef(false);
+
+  useEffect(() => {
+    const checkOrientation = () => {
+      setIsLandscape(window.innerWidth > window.innerHeight);
+    };
+    checkOrientation();
+    window.addEventListener('resize', checkOrientation);
+    return () => window.removeEventListener('resize', checkOrientation);
+  }, []);
 
   // Sync ref with state
   useEffect(() => {
@@ -88,22 +97,22 @@ const Songs = () => {
 
     if (!melody) {
       return (
-        <div className="min-h-screen bg-gradient-sky flex items-center justify-center">
+        <div className="h-screen bg-gradient-sky flex items-center justify-center">
           <p>Song not found</p>
         </div>
       );
     }
 
     return (
-      <div className="min-h-screen bg-gradient-sky flex flex-col safe-top safe-bottom">
-        {/* Header */}
+      <div className="h-screen max-h-screen overflow-hidden bg-gradient-sky flex flex-col">
+        {/* Compact Header */}
         <motion.div 
-          className="flex items-center gap-4 p-4"
+          className={`flex items-center gap-3 ${isLandscape ? 'px-4 py-2' : 'p-4'}`}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
           <motion.button
-            className="p-3 bg-card rounded-full shadow-soft"
+            className="p-2 bg-card rounded-full shadow-soft"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => {
@@ -111,136 +120,132 @@ const Songs = () => {
               setSelectedSong(null);
             }}
           >
-            <ArrowLeft className="w-6 h-6" />
+            <ArrowLeft className="w-5 h-5" />
           </motion.button>
 
-          <div>
-            <h1 className="text-xl font-bold">{song?.title}</h1>
-            <p className="text-sm text-muted-foreground">{song?.difficulty}</p>
+          <div className="flex-1">
+            <h1 className="text-lg font-bold">{song?.title}</h1>
+            {!isLandscape && <p className="text-xs text-muted-foreground">{song?.difficulty}</p>}
           </div>
+
+          {/* Play controls in header for landscape */}
+          {isLandscape && (
+            <motion.button
+              className={`px-4 py-2 rounded-xl font-bold shadow-button flex items-center gap-2 ${
+                isPlaying ? 'bg-destructive text-destructive-foreground' : 'bg-gradient-primary text-primary-foreground'
+              }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={isPlaying ? stopSong : playSong}
+            >
+              {isPlaying ? <Square className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+              {isPlaying ? 'Stop' : 'Play'}
+            </motion.button>
+          )}
         </motion.div>
 
-        {/* Main content */}
-        <div className="flex-1 flex flex-col items-center justify-center px-4">
+        {/* Main content - Responsive layout */}
+        <div className={`flex-1 flex ${isLandscape ? 'flex-row items-center px-4 gap-6' : 'flex-col items-center justify-center px-4'} overflow-hidden`}>
+          
+          {/* Controls & Notes - Side panel in landscape */}
           <motion.div 
-            className="bg-card rounded-3xl p-6 shadow-card text-center mb-6 w-full max-w-sm"
+            className={`flex flex-col items-center ${isLandscape ? 'w-48 shrink-0' : 'mb-4'}`}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
           >
-            <motion.div
-              className="text-6xl mb-4"
-              animate={isPlaying ? { rotate: [0, 10, -10, 0] } : {}}
-              transition={{ duration: 0.5, repeat: isPlaying ? Infinity : 0 }}
-            >
-              🎵
-            </motion.div>
-
-            {isPlaying ? (
-              <>
-                <p className="text-lg font-bold text-primary animate-pulse">
-                  Now Playing...
-                </p>
-                <p className="text-muted-foreground mb-4">
-                  Note {currentNoteIndex + 1} of {melody.notes.length}
-                </p>
-                <motion.button
-                  className="bg-destructive text-destructive-foreground px-8 py-4 rounded-2xl font-bold shadow-button flex items-center justify-center gap-2 mx-auto"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={stopSong}
-                >
-                  <Square className="w-5 h-5" />
-                  Stop
-                </motion.button>
-              </>
-            ) : (
-              <>
-                <p className="text-muted-foreground mb-4">
-                  {melody.notes.length} notes • Tap Play to hear the song!
-                </p>
-                <motion.button
-                  className="bg-gradient-primary text-primary-foreground px-8 py-4 rounded-2xl font-bold shadow-button flex items-center justify-center gap-2 mx-auto"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={playSong}
-                >
-                  <Play className="w-5 h-5" />
-                  Play Song
-                </motion.button>
-              </>
+            {/* Play button for portrait */}
+            {!isLandscape && (
+              <motion.button
+                className={`px-6 py-3 rounded-2xl font-bold shadow-button flex items-center gap-2 mb-4 ${
+                  isPlaying ? 'bg-destructive text-destructive-foreground' : 'bg-gradient-primary text-primary-foreground'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={isPlaying ? stopSong : playSong}
+              >
+                {isPlaying ? <Square className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                {isPlaying ? 'Stop' : 'Play Song'}
+              </motion.button>
             )}
+
+            {isPlaying && (
+              <p className="text-sm text-muted-foreground mb-2">
+                Note {currentNoteIndex + 1}/{melody.notes.length}
+              </p>
+            )}
+
+            {/* Note visualization - Compact */}
+            <div className={`flex flex-wrap justify-center gap-1 ${isLandscape ? 'max-w-full' : 'max-w-xs'}`}>
+              {melody.notes.slice(0, isLandscape ? 20 : 14).map((note, index) => (
+                <motion.div
+                  key={index}
+                  className={`w-7 h-7 rounded-md flex items-center justify-center font-bold text-xs transition-all ${
+                    index === currentNoteIndex && isPlaying
+                      ? 'bg-accent text-accent-foreground scale-110 shadow-md'
+                      : index < currentNoteIndex && isPlaying
+                      ? 'bg-success/40 text-success-foreground'
+                      : 'bg-muted text-muted-foreground'
+                  }`}
+                >
+                  {note.replace('4', '').replace('5', '')}
+                </motion.div>
+              ))}
+              {melody.notes.length > (isLandscape ? 20 : 14) && (
+                <span className="text-muted-foreground text-xs">+{melody.notes.length - (isLandscape ? 20 : 14)}</span>
+              )}
+            </div>
           </motion.div>
 
-          {/* Note visualization */}
-          <div className="flex flex-wrap justify-center gap-2 max-w-sm px-4">
-            {melody.notes.map((note, index) => (
-              <motion.div
-                key={index}
-                className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-xs transition-all ${
-                  index === currentNoteIndex && isPlaying
-                    ? 'bg-accent text-accent-foreground scale-125 shadow-lg'
-                    : index < currentNoteIndex && isPlaying
-                    ? 'bg-success/40 text-success-foreground'
-                    : 'bg-muted text-muted-foreground'
-                }`}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: index * 0.03 }}
-              >
-                {note.replace('4', '').replace('5', '')}
-              </motion.div>
-            ))}
-          </div>
+          {/* Piano - Maximized in landscape */}
+          <motion.div 
+            className={`${isLandscape ? 'flex-1 max-w-4xl' : 'w-full'}`}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <Piano 
+              highlightedKeys={highlightedKeys}
+              onKeyPress={handleKeyPress}
+              colorfulKeys={true}
+              size={isLandscape ? 'large' : 'medium'}
+            />
+          </motion.div>
         </div>
-
-        {/* Piano */}
-        <motion.div 
-          className="px-2 pb-4"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <Piano 
-            highlightedKeys={highlightedKeys}
-            onKeyPress={handleKeyPress}
-            colorfulKeys={true}
-            size="large"
-          />
-        </motion.div>
       </div>
     );
   }
 
+  // Song library view
   return (
-    <div className="min-h-screen bg-gradient-sky safe-top safe-bottom">
-      <div className="container max-w-md mx-auto px-4 py-6">
+    <div className="h-screen max-h-screen overflow-auto bg-gradient-sky">
+      <div className={`container max-w-2xl mx-auto px-4 py-4 ${isLandscape ? 'py-2' : ''}`}>
         {/* Header */}
         <motion.div 
-          className="flex items-center gap-4 mb-6"
+          className="flex items-center gap-4 mb-4"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
           <motion.button
-            className="p-3 bg-card rounded-full shadow-soft"
+            className="p-2 bg-card rounded-full shadow-soft"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/home')}
           >
-            <ArrowLeft className="w-6 h-6" />
+            <Home className="w-5 h-5" />
           </motion.button>
 
-          <h1 className="text-2xl font-bold">Song Library</h1>
+          <h1 className="text-xl font-bold">Song Library</h1>
         </motion.div>
 
-        {/* Song Grid */}
+        {/* Song Grid - More columns in landscape */}
         <motion.div 
-          className="grid grid-cols-2 gap-3"
+          className={`grid gap-3 ${isLandscape ? 'grid-cols-4 md:grid-cols-5' : 'grid-cols-2 sm:grid-cols-3'}`}
           initial="hidden"
           animate="visible"
           variants={{
             hidden: { opacity: 0 },
             visible: {
               opacity: 1,
-              transition: { staggerChildren: 0.08 },
+              transition: { staggerChildren: 0.05 },
             },
           }}
         >
@@ -265,25 +270,6 @@ const Songs = () => {
               </motion.div>
             );
           })}
-        </motion.div>
-
-        {/* Fun message */}
-        <motion.div 
-          className="mt-6 text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          <motion.div
-            className="text-4xl mb-2"
-            animate={{ rotate: [0, 10, -10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            🎹
-          </motion.div>
-          <p className="text-muted-foreground font-semibold">
-            Tap a song to play it!
-          </p>
         </motion.div>
       </div>
     </div>

@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import OrientationPrompt from "./components/ui/OrientationPrompt";
 import Splash from "./pages/Splash";
 import Home from "./pages/Home";
 import FreePlay from "./pages/FreePlay";
@@ -22,6 +23,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <OrientationPrompt />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Splash />} />

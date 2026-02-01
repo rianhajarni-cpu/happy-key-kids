@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import PianoKey, { WHITE_KEY_COLORS } from './PianoKey';
 
@@ -25,6 +25,16 @@ const Piano = ({
   size = 'large',
 }: PianoProps) => {
   const [pressedKey, setPressedKey] = useState<string | null>(null);
+  const [isLandscape, setIsLandscape] = useState(false);
+
+  useEffect(() => {
+    const checkOrientation = () => {
+      setIsLandscape(window.innerWidth > window.innerHeight);
+    };
+    checkOrientation();
+    window.addEventListener('resize', checkOrientation);
+    return () => window.removeEventListener('resize', checkOrientation);
+  }, []);
 
   const handleKeyPress = (note: string) => {
     setPressedKey(note);
@@ -32,15 +42,18 @@ const Piano = ({
     setTimeout(() => setPressedKey(null), 150);
   };
 
-  const sizeClasses = {
-    small: 'h-28',
-    medium: 'h-36',
-    large: 'h-44',
+  // Dynamically adjust height based on orientation and size
+  const getHeightClass = () => {
+    if (isLandscape) {
+      // Taller keys in landscape for better playability
+      return size === 'large' ? 'h-52' : size === 'medium' ? 'h-44' : 'h-36';
+    }
+    return size === 'large' ? 'h-44' : size === 'medium' ? 'h-36' : 'h-28';
   };
 
   return (
     <motion.div 
-      className={`relative flex rounded-t-3xl overflow-hidden shadow-card bg-card/50 backdrop-blur-sm p-2 ${sizeClasses[size]}`}
+      className={`relative flex rounded-t-3xl overflow-hidden shadow-card bg-card/50 backdrop-blur-sm p-2 ${getHeightClass()}`}
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
