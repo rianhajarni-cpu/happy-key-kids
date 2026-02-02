@@ -211,6 +211,36 @@ export const MELODIES = {
     notes: ['G4', 'G4', 'D4', 'D4', 'E4', 'F4', 'G4', 'A4', 'G4', 'F4', 'E4', 'E4', 'D4', 'C4', 'D4', 'E4', 'F4', 'G4'],
     tempo: 400,
   },
+  'itsy-bitsy-spider': {
+    name: 'Itsy Bitsy Spider',
+    notes: ['G4', 'C4', 'C4', 'C4', 'D4', 'E4', 'E4', 'E4', 'D4', 'C4', 'D4', 'E4', 'C4'],
+    tempo: 400,
+  },
+  'abc-song': {
+    name: 'ABC Song',
+    notes: ['C4', 'C4', 'G4', 'G4', 'A4', 'A4', 'G4', 'F4', 'F4', 'E4', 'E4', 'D4', 'D4', 'C4'],
+    tempo: 400,
+  },
+  'wheels-on-bus': {
+    name: 'Wheels on the Bus',
+    notes: ['C4', 'C4', 'C4', 'C4', 'E4', 'G4', 'G4', 'E4', 'C4', 'G4', 'F4', 'E4', 'D4', 'C4'],
+    tempo: 380,
+  },
+  'rain-rain': {
+    name: 'Rain Rain Go Away',
+    notes: ['E4', 'D4', 'C4', 'D4', 'E4', 'E4', 'E4', 'D4', 'D4', 'D4', 'E4', 'G4', 'G4'],
+    tempo: 400,
+  },
+  'if-youre-happy': {
+    name: "If You're Happy",
+    notes: ['C4', 'C4', 'C4', 'E4', 'E4', 'E4', 'G4', 'E4', 'C4', 'G4', 'F4', 'E4', 'D4', 'C4'],
+    tempo: 350,
+  },
+  'head-shoulders': {
+    name: 'Head Shoulders Knees',
+    notes: ['C4', 'D4', 'E4', 'F4', 'G4', 'G4', 'G4', 'A4', 'G4', 'F4', 'E4', 'D4', 'C4'],
+    tempo: 350,
+  },
 };
 
 export type MelodyId = keyof typeof MELODIES;

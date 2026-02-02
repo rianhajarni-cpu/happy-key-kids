@@ -8,19 +8,24 @@ import { MELODIES, MelodyId, playNote } from '@/lib/audio';
 import { getProgress } from '@/lib/storage';
 
 const SONGS = [
-  // Beginner - Free
+  // Beginner
   { id: 'twinkle-twinkle' as MelodyId, title: 'Twinkle Twinkle', color: 'blue' as const, premium: false, difficulty: 'Easy' },
   { id: 'mary-lamb' as MelodyId, title: 'Mary Had A Lamb', color: 'pink' as const, premium: false, difficulty: 'Easy' },
   { id: 'happy-birthday' as MelodyId, title: 'Happy Birthday', color: 'yellow' as const, premium: false, difficulty: 'Easy' },
-  // Beginner - More
   { id: 'hot-cross-buns' as MelodyId, title: 'Hot Cross Buns', color: 'orange' as const, premium: false, difficulty: 'Easy' },
   { id: 'london-bridge' as MelodyId, title: 'London Bridge', color: 'green' as const, premium: false, difficulty: 'Easy' },
+  { id: 'row-your-boat' as MelodyId, title: 'Row Your Boat', color: 'blue' as const, premium: false, difficulty: 'Easy' },
+  { id: 'baa-baa-sheep' as MelodyId, title: 'Baa Baa Black Sheep', color: 'purple' as const, premium: false, difficulty: 'Easy' },
+  { id: 'rain-rain' as MelodyId, title: 'Rain Rain Go Away', color: 'blue' as const, premium: false, difficulty: 'Easy' },
   // Intermediate
   { id: 'ode-to-joy' as MelodyId, title: 'Ode to Joy', color: 'purple' as const, premium: false, difficulty: 'Medium' },
   { id: 'jingle-bells' as MelodyId, title: 'Jingle Bells', color: 'red' as const, premium: false, difficulty: 'Medium' },
-  { id: 'row-your-boat' as MelodyId, title: 'Row Your Boat', color: 'blue' as const, premium: false, difficulty: 'Easy' },
   { id: 'old-macdonald' as MelodyId, title: 'Old MacDonald', color: 'green' as const, premium: false, difficulty: 'Medium' },
-  { id: 'baa-baa-sheep' as MelodyId, title: 'Baa Baa Black Sheep', color: 'purple' as const, premium: false, difficulty: 'Easy' },
+  { id: 'itsy-bitsy-spider' as MelodyId, title: 'Itsy Bitsy Spider', color: 'pink' as const, premium: false, difficulty: 'Medium' },
+  { id: 'abc-song' as MelodyId, title: 'ABC Song', color: 'yellow' as const, premium: false, difficulty: 'Easy' },
+  { id: 'wheels-on-bus' as MelodyId, title: 'Wheels on the Bus', color: 'orange' as const, premium: false, difficulty: 'Medium' },
+  { id: 'if-youre-happy' as MelodyId, title: "If You're Happy", color: 'green' as const, premium: false, difficulty: 'Medium' },
+  { id: 'head-shoulders' as MelodyId, title: 'Head Shoulders Knees', color: 'red' as const, premium: false, difficulty: 'Medium' },
 ];
 
 const Songs = () => {
@@ -144,42 +149,40 @@ const Songs = () => {
           )}
         </motion.div>
 
-        {/* Main content - Responsive layout */}
-        <div className={`flex-1 flex ${isLandscape ? 'flex-row items-center px-4 gap-6' : 'flex-col items-center justify-center px-4'} overflow-hidden`}>
+        {/* Main content - Vertical layout with notes above piano */}
+        <div className="flex-1 flex flex-col items-center justify-end px-4 pb-4 overflow-hidden">
           
-          {/* Controls & Notes - Side panel in landscape */}
+          {/* Controls & Notes - Always on top */}
           <motion.div 
-            className={`flex flex-col items-center ${isLandscape ? 'w-48 shrink-0' : 'mb-4'}`}
+            className="flex flex-col items-center w-full mb-3"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
           >
-            {/* Play button for portrait */}
-            {!isLandscape && (
-              <motion.button
-                className={`px-6 py-3 rounded-2xl font-bold shadow-button flex items-center gap-2 mb-4 ${
-                  isPlaying ? 'bg-destructive text-destructive-foreground' : 'bg-gradient-primary text-primary-foreground'
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={isPlaying ? stopSong : playSong}
-              >
-                {isPlaying ? <Square className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-                {isPlaying ? 'Stop' : 'Play Song'}
-              </motion.button>
-            )}
+            {/* Play button */}
+            <motion.button
+              className={`px-5 py-2 rounded-xl font-bold shadow-button flex items-center gap-2 mb-3 ${
+                isPlaying ? 'bg-destructive text-destructive-foreground' : 'bg-gradient-primary text-primary-foreground'
+              }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={isPlaying ? stopSong : playSong}
+            >
+              {isPlaying ? <Square className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+              {isPlaying ? 'Stop' : 'Play Song'}
+            </motion.button>
 
             {isPlaying && (
-              <p className="text-sm text-muted-foreground mb-2">
+              <p className="text-xs text-muted-foreground mb-2">
                 Note {currentNoteIndex + 1}/{melody.notes.length}
               </p>
             )}
 
-            {/* Note visualization - Compact */}
-            <div className={`flex flex-wrap justify-center gap-1 ${isLandscape ? 'max-w-full' : 'max-w-xs'}`}>
-              {melody.notes.slice(0, isLandscape ? 20 : 14).map((note, index) => (
+            {/* Note visualization - Horizontal scroll */}
+            <div className="flex flex-wrap justify-center gap-1 max-w-full px-2">
+              {melody.notes.slice(0, isLandscape ? 30 : 16).map((note, index) => (
                 <motion.div
                   key={index}
-                  className={`w-7 h-7 rounded-md flex items-center justify-center font-bold text-xs transition-all ${
+                  className={`w-6 h-6 rounded-md flex items-center justify-center font-bold text-xs transition-all ${
                     index === currentNoteIndex && isPlaying
                       ? 'bg-accent text-accent-foreground scale-110 shadow-md'
                       : index < currentNoteIndex && isPlaying
@@ -190,16 +193,16 @@ const Songs = () => {
                   {note.replace('4', '').replace('5', '')}
                 </motion.div>
               ))}
-              {melody.notes.length > (isLandscape ? 20 : 14) && (
-                <span className="text-muted-foreground text-xs">+{melody.notes.length - (isLandscape ? 20 : 14)}</span>
+              {melody.notes.length > (isLandscape ? 30 : 16) && (
+                <span className="text-muted-foreground text-xs self-center">+{melody.notes.length - (isLandscape ? 30 : 16)}</span>
               )}
             </div>
           </motion.div>
 
-          {/* Piano - Maximized in landscape */}
+          {/* Piano - Full width at bottom */}
           <motion.div 
-            className={`${isLandscape ? 'flex-1 max-w-4xl' : 'w-full'}`}
-            initial={{ opacity: 0, y: 50 }}
+            className="w-full max-w-4xl"
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
           >
             <Piano 
