@@ -4,7 +4,6 @@ import { RotateCcw } from 'lucide-react';
 
 const OrientationPrompt = () => {
   const [isPortrait, setIsPortrait] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
     const checkOrientation = () => {
@@ -24,19 +23,12 @@ const OrientationPrompt = () => {
     };
   }, []);
 
-  // Reset dismissed state when orientation changes
-  useEffect(() => {
-    if (!isPortrait) {
-      setDismissed(false);
-    }
-  }, [isPortrait]);
-
-  if (!isPortrait || dismissed) return null;
+  if (!isPortrait) return null;
 
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-50 bg-gradient-sky flex flex-col items-center justify-center p-6"
+        className="fixed inset-0 z-[100] bg-gradient-sky flex flex-col items-center justify-center p-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -81,21 +73,34 @@ const OrientationPrompt = () => {
           </motion.div>
 
           <h2 className="text-2xl font-black text-primary mb-2">
-            Rotate Your Device!
+            Landscape Mode Required
           </h2>
           
-          <p className="text-muted-foreground mb-6">
-            For the best piano experience, please turn your device to <strong>landscape mode</strong> (sideways) 📱➡️🖥️
+          <p className="text-muted-foreground mb-4">
+            This app works <strong>only in landscape mode</strong> for the best piano playing experience!
           </p>
 
-          <motion.button
-            className="bg-muted text-muted-foreground px-6 py-3 rounded-2xl font-semibold"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setDismissed(true)}
-          >
-            Continue Anyway
-          </motion.button>
+          <div className="bg-accent/20 rounded-2xl p-4 mb-4">
+            <p className="text-sm font-semibold text-accent-foreground">
+              📱 Please rotate your device sideways to continue
+            </p>
+          </div>
+
+          <div className="flex justify-center gap-2 text-2xl">
+            <motion.span
+              animate={{ x: [0, 10, 0] }}
+              transition={{ duration: 1, repeat: Infinity }}
+            >
+              📱
+            </motion.span>
+            <span>➡️</span>
+            <motion.span
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 1, repeat: Infinity }}
+            >
+              🖥️
+            </motion.span>
+          </div>
         </motion.div>
 
         {/* Decorative elements */}
@@ -112,6 +117,13 @@ const OrientationPrompt = () => {
           transition={{ duration: 2.5, repeat: Infinity, delay: 0.5 }}
         >
           ✨
+        </motion.div>
+        <motion.div
+          className="absolute top-20 right-20 text-2xl"
+          animate={{ rotate: [0, 360] }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+        >
+          🎶
         </motion.div>
       </motion.div>
     </AnimatePresence>
