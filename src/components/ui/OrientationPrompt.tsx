@@ -1,9 +1,17 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RotateCcw } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+
+// Routes that allow portrait mode
+const PORTRAIT_ALLOWED_ROUTES = ['/', '/home', '/parent'];
 
 const OrientationPrompt = () => {
   const [isPortrait, setIsPortrait] = useState(false);
+  const location = useLocation();
+
+  // Check if current route allows portrait mode
+  const allowsPortrait = PORTRAIT_ALLOWED_ROUTES.includes(location.pathname);
 
   useEffect(() => {
     const checkOrientation = () => {
@@ -23,7 +31,8 @@ const OrientationPrompt = () => {
     };
   }, []);
 
-  if (!isPortrait) return null;
+  // Don't show if portrait is allowed on this route or if already in landscape
+  if (allowsPortrait || !isPortrait) return null;
 
   return (
     <AnimatePresence>

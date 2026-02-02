@@ -23,8 +23,8 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <OrientationPrompt />
       <BrowserRouter>
+        <OrientationPrompt />
         <Routes>
           <Route path="/" element={<Splash />} />
           <Route path="/home" element={<Home />} />
